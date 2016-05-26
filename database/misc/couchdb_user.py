@@ -85,6 +85,15 @@ EXAMPLES = '''
 '''
 
 
+RETURN = '''
+user:
+    description: managed username
+    returned: success
+    type: string
+    sample: "bob"
+'''
+
+
 from binascii import hexlify
 import json
 from passlib.utils.pbkdf2 import pbkdf2
