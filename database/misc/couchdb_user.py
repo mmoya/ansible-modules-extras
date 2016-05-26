@@ -30,49 +30,49 @@ author: "Maykel Moya, @mmoya"
 options:
   name:
     description:
-      - name of the user to add or remove
+      - Name of the user to add or remove.
     required: true
   password:
     description:
-      - password of the user
+      - Password of the user.
     required: false
     default: null
   roles:
     description
-      - list of roles of the user
+      - List of roles of the user.
     required: false
     default: []
   login_user:
     description:
-      - The username used to authenticate to CouchDB
+      - The username used to authenticate to CouchDB.
     required: false
     default: null
   login_password:
     description:
-      - The password used to authenticate to CouchDB
+      - The password used to authenticate to CouchDB.
     required: false
     default: null
   login_host:
     description:
-      - Host of the CouchDB server
+      - Host of the CouchDB server.
     required: false
     default: localhost
   login_port:
     description:
-      - Port of the CouchDB server
+      - Port of the CouchDB server.
     required: false
     default: 5984
   state:
     description:
-      - The user state
+      - The user state.
     required: false
     default: present
     choices: [ "present", "absent" ]
 notes:
+   - I(login_user) and I(login_password) are required together.
+   - If you omit C(password) or C(roles), current values will be removed.
    - Requires the passlib python library on the remote host. In Debian systems
      you can apt-get install python-passlib.
-   - Both I(login_user) and I(login_password) are required if you pass one of
-     them.
 requirements: [ passlib ]
 author: Maykel Moya
 '''
@@ -82,6 +82,8 @@ EXAMPLES = '''
 # Create a new user with name 'bob'
 - couchdb_user: name=bob password=bar state=present
 
+# Add roles to user 'bob'
+- couchdb_user: name=bob password=bar roles=admin,viewer state=present
 '''
 
 
