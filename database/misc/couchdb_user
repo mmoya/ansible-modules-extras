@@ -224,7 +224,8 @@ def main():
             password=dict(required=False, no_log=True),
             roles=dict(required=False, type='list', default=[]),
             state=dict(default="present", choices=["absent", "present"]),
-        )
+        ),
+        required_together=(('login_user', 'login_password'),),
     )
 
     username = module.params["name"]
@@ -251,12 +252,6 @@ def main():
         login_user,
         login_password
     )
-
-    if any(credentials):
-        if not all(credentials):
-            msg = ("when supplying login arguments, both login_user and "
-                   "login_password must be provided")
-            module.fail_json(msg=msg)
 
     changed = False
 
