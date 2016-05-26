@@ -218,7 +218,7 @@ def main():
             login_user=dict(default=None),
             login_password=dict(default=None, no_log=True),
             login_host=dict(default="localhost"),
-            login_port=dict(default="5984"),
+            login_port=dict(type='int', default=5984),
 
             name=dict(required=True, aliases=['username']),
             password=dict(required=False, no_log=True),
