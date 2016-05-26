@@ -285,7 +285,8 @@ def main():
                 else:
                     create_args['password'] = password
             else:
-                create_args['password'] = None
+                if 'derived_key' in userobj:
+                    create_args['password'] = None
 
             if roles is not None and set(userobj['roles']) != set(roles):
                 create_args['roles'] = roles
