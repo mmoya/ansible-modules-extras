@@ -26,6 +26,7 @@ short_description: Add or remove CouchDB users.
 description:
    - Add or remove CouchDB users from a remote host.
 version_added: "2.2"
+author: "Maykel Moya, @mmoya"
 options:
   name:
     description:
