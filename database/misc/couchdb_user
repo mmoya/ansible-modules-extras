@@ -34,9 +34,13 @@ options:
   password:
     description:
       - password of the user
+    required: false
+    default: null
   roles:
     description
       - list of roles of the user
+    required: false
+    default: []
   login_user:
     description:
       - The username used to authenticate to CouchDB
