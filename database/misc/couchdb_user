@@ -207,12 +207,12 @@ def main():
     module = AnsibleModule(
         argument_spec=dict(
             login_user=dict(default=None),
-            login_password=dict(default=None),
+            login_password=dict(default=None, no_log=True),
             login_host=dict(default="localhost"),
             login_port=dict(default="5984"),
 
             name=dict(required=True, aliases=['username']),
-            password=dict(required=False),
+            password=dict(required=False, no_log=True),
             roles=dict(required=False, type='list', default=[]),
             state=dict(default="present", choices=["absent", "present"]),
         )
