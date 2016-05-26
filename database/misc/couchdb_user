@@ -85,6 +85,7 @@ EXAMPLES = '''
 
 
 from binascii import hexlify
+import json
 from passlib.utils.pbkdf2 import pbkdf2
 
 from ansible.module_utils import urls
