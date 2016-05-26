@@ -68,14 +68,11 @@ options:
     default: present
     choices: [ "present", "absent" ]
 notes:
-   - Requires the requests python library on the remote host. In Debian systems
-     you can apt-get install python-requests (see M(apt)). In RedHat systems
-     you can yum install python-requests (see M(yum)).
    - Requires the passlib python library on the remote host. In Debian systems
      you can apt-get install python-passlib.
    - Both I(login_user) and I(login_password) are required if you pass one of
      them.
-requirements: [ passlib, requests ]
+requirements: [ passlib ]
 author: Maykel Moya
 '''
 
@@ -89,7 +86,8 @@ EXAMPLES = '''
 
 from binascii import hexlify
 from passlib.utils.pbkdf2 import pbkdf2
-import requests
+
+from ansible.module_utils import urls
 
 
 # ===========================================
@@ -110,15 +108,19 @@ def couchdb_user_get(host, credentials, username):
     """
 
     url = couchdb_user_url(host, username)
-    r = requests.get(url, auth=credentials)
 
-    if not r.ok:
-        if r.status_code == 404:
+    try:
+        r = urls.open_url(url,
+                          url_username=credentials[0],
+                          url_password=credentials[1])
+    except urls.urllib2.HTTPError as e:
+        if e.code == 404:
             return None
         else:
-            r.raise_for_status()
+            raise
 
-    return r.json()
+    obj = json.load(r)
+    return obj
 
 
 def couchdb_user_delete(host, credentials, userobj):
@@ -128,8 +130,9 @@ def couchdb_user_delete(host, credentials, userobj):
 
     url = couchdb_user_url(host, userobj['name'])
     url = '%s?rev=%s' % (url, userobj['_rev'])
-    r = requests.delete(url, auth=credentials)
-    r.raise_for_status()
+    urls.open_url(url, method='DELETE',
+                  url_username=credentials[0],
+                  url_password=credentials[1])
     return True
 
 
@@ -185,8 +188,10 @@ def couchdb_user_create(host, credentials, username, password=None, roles=None,
         data['salt'] = salt
         data['iterations'] = iterations
 
-    r = requests.put(url, auth=credentials, data=json.dumps(data))
-    r.raise_for_status()
+    urls.open_url(url, data=json.dumps(data), method='PUT',
+                  url_username=credentials[0],
+                  url_password=credentials[1])
+
     return True
 
 
@@ -251,8 +256,6 @@ def main():
             msg = ("when supplying login arguments, both login_user and "
                    "login_password must be provided")
             module.fail_json(msg=msg)
-    else:
-        credentials = None
 
     changed = False
 
